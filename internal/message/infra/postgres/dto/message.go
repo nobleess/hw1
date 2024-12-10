@@ -1,17 +1,35 @@
 package dto
 
 import (
-	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/message/domain/model/message/text"
 	"time"
 
 	pgxUUID "github.com/vgarvardt/pgx-google-uuid/v5"
 )
 
-type TextMessage struct {
-	ID   pgxUUID.UUID   `db:"id"`
-	From pgxUUID.UUID   `db:"from"`
-	To   []pgxUUID.UUID `db:"to"`
-	Time time.Time      `db:time`
-	Text string         `db:text`
+type Message struct {
+	ID        pgxUUID.UUID `db:"id"`
+	UserId    pgxUUID.UUID `db:"user_id"`
+	ChannelId pgxUUID.UUID `db:"channel_id"`
+	Text      string       `db:"text"`
+	CreateAt  time.Time    `db:"create_at"`
+	UpdateAt  time.Time    `db:"update_at"`
+	DeleteAt  time.Time    `db:"delete_at"`
 }
+
+func MessageAdapter(msgs []Message) text.Message {
+	bmodel := make([]text.Message, 0)
+	for _, m := range msgs {
+		bmodel = append(bmodel, *text.NewMessage())
+	}
+}
+
+// type SystemMessage struct {
+// 	ID        pgxUUID.UUID `db:"id"`
+// 	UserId    pgxUUID.UUID `db:"user_id"`
+// 	ChannelId pgxUUID.UUID `db:"from"`
+// 	Text      string       `db:"text"`
+// 	CreateAt  time.Time    `db:"create_at"`
+// 	UpdateAt  time.Time    `db:"update_at"`
+// 	DeleteAt  time.Time    `db:"delete_at"`
+// }

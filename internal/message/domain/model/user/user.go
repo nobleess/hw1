@@ -2,10 +2,12 @@ package user
 
 import (
 	"sync/atomic"
+
+	"github.com/google/uuid"
 )
 
 type Login string
-type ID uint64
+type ID uuid.UUID
 
 var userGID atomic.Uint64 = atomic.Uint64{}
 
@@ -14,14 +16,14 @@ type User struct {
 	id    ID
 }
 
-func GenerateID() ID {
-	return ID(userGID.Add(1))
-}
+// func GenerateID() ID {
+// 	return ID(userGID.Add(1))
+// }
 
-func New(login Login) *User {
+func New(id ID, login Login) *User {
 	return &User{
 		login: login,
-		id:    GenerateID(),
+		id:    id,
 	}
 }
 

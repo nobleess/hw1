@@ -5,7 +5,6 @@ import (
 
 	"main/internal/message/domain/model/user"
 	"main/internal/message/infra"
-	"main/internal/message/infra/dto"
 	"main/internal/message/infra/postgres/dto"
 )
 
@@ -14,9 +13,9 @@ type UserRepository struct {
 	//	somelse
 }
 
-func (u UserRepository) GetUsers(ctx context.Context) ([]dto.User, error) {
+func (u UserRepository) GetUsers(ctx context.Context) ([]user.User, error) {
 
-	rows, err := u.db.Query(ctx, "SELECT * FROM users")
+	rows, err := u.db.Query(ctx, "SELECT id, username FROM users")
 
 	if err != nil {
 		return nil, err
@@ -27,12 +26,10 @@ func (u UserRepository) GetUsers(ctx context.Context) ([]dto.User, error) {
 	users := make([]dto.User, 0)
 
 	for rows.Next() {
-		var u dto.user
+		var u dto.User
 		if err = rows.Scan(
 			&u.ID,
-			&u.FirstName,
-			&u.LastName,
-			&u.Data,
+			&u.Username,
 		); err != nil {
 			return nil, err
 		}
@@ -42,7 +39,7 @@ func (u UserRepository) GetUsers(ctx context.Context) ([]dto.User, error) {
 		return nil, err
 	}
 
-	return users, nil
+	return dto.UserAdapter(users), nil
 }
 
 func (u UserRepository) Create(ctx context.Context, user user.User) error {

@@ -9,20 +9,22 @@ import (
 
 // Message
 type Message struct {
-	id   message.ID
-	from user.Login
-	to   []user.Login
-	time time.Time
-	text string
+	id        message.ID // `db:"id"`
+	userId    user.ID    // `db:"user_id"`
+	channelId message.ID // `db:"channel_id"`
+	text      string     // `db:"text"`
+	CreateAt  time.Time  // `db:"create_at"`
+	UpdateAt  time.Time  // `db:"update_at"`
 }
 
-func NewMessage(from user.Login, to []user.Login, time time.Time, text string) *Message {
-	return &Message{
-		id:   message.GenerateID(),
-		from: from,
-		to:   to,
-		time: time,
-		text: text,
+func NewMessage(id message.ID, userId user.ID, channelId channel.ID, createAt time.Time, updateAt time.Time, text string) Message {
+	return Message{
+		id:        id,
+		userId:    userId,
+		channelId: channelId,
+		CreateAt:  createAt,
+		UpdateAt:  updateAt,
+		text:      text,
 	}
 }
 

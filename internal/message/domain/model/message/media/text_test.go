@@ -2,11 +2,12 @@ package media
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"main/internal/message/domain/model/message"
 	"main/internal/message/domain/model/user"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewMediaMessage(t *testing.T) {

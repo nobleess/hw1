@@ -4,11 +4,13 @@ import (
 	"main/internal/message/domain/model/user"
 	"sync/atomic"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 var msgGID atomic.Uint64 = atomic.Uint64{} // Счётчик для уникальных ID
 
-type ID int64
+type ID uuid.UUID
 
 type Message interface {
 	From() user.Login
@@ -21,6 +23,6 @@ type Message interface {
 }
 
 // Функция для генерации уникального ID
-func GenerateID() ID {
-	return ID(msgGID.Add(1))
-}
+// func GenerateID() ID {
+// 	return ID(msgGID.Add(1))
+// }

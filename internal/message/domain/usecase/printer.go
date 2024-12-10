@@ -1,31 +1,33 @@
 package usecase
 
 import (
+	"context"
 	"fmt"
 	"io"
-	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+
+	"main/internal/message/infra/postgres"
 )
 
-type Storage interface {
-	GetUserMessages(user.Login) ([]message.Message, error)
-	GetUsers() []user.User
-}
-
 type Printer struct {
-	storage Storage
+	messageReposytory postgres.MessageReposytory
+	userRepository    postgres.UserRepository
 }
 
-func NewPrinter(storage Storage) *Printer {
+func NewPrinter(messageReposytory postgres.MessageReposytory, userRepository postgres.UserRepository) *Printer {
 	return &Printer{
-		storage: storage,
+		messageReposytory: messageReposytory,
+		userRepository:    userRepository,
 	}
 
 }
 
-func (p *Printer) Print(w io.Writer) error {
-	for _, u := range p.storage.GetUsers() {
-		msgs, err := p.storage.GetUserMessages(u.Login())
+func (p *Printer) PrintAll(ctx context.Context, w io.Writer) error {
+	users, err := p.userRepository.GetUsers(ctx)
+	if err != nil {
+		return err
+	}
+	for _, u := range users {
+		msgs, err := p.messageReposytory.FindByUserId(ctx, u.ID())
 		if err != nil {
 			return err
 		}
