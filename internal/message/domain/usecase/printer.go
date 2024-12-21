@@ -9,11 +9,11 @@ import (
 )
 
 type Printer struct {
-	messageReposytory postgres.MessageReposytory
+	messageReposytory postgres.MessageRepository
 	userRepository    postgres.UserRepository
 }
 
-func NewPrinter(messageReposytory postgres.MessageReposytory, userRepository postgres.UserRepository) *Printer {
+func NewPrinter(messageReposytory postgres.MessageRepository, userRepository postgres.UserRepository) *Printer {
 	return &Printer{
 		messageReposytory: messageReposytory,
 		userRepository:    userRepository,

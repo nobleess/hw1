@@ -6,19 +6,20 @@ import (
 	"main/internal/message/domain/model/user"
 	"main/internal/message/infra"
 	"main/internal/message/infra/postgres/dto"
+	user2 "main/internal/user/domain/model"
 )
 
-type MessageReposytory struct {
+type MessageRepository struct {
 	db infra.DB
 }
 
-func NewMessageReposytory(db infra.DB) *MessageReposytory {
-	return &MessageReposytory{
+func NewMessageReposytory(db infra.DB) *MessageRepository {
+	return &MessageRepository{
 		db: db,
 	}
 }
 
-func (m MessageReposytory) Create(ctx context.Context, msg message.Message) error {
+func (m MessageRepository) Create(ctx context.Context, msg message.Message) error {
 
 	tx, err := m.db.BeginTx(ctx)
 
@@ -31,7 +32,8 @@ func (m MessageReposytory) Create(ctx context.Context, msg message.Message) erro
 	if ct, err := tx.Exec(
 		ctx,
 		// todo
-		"insert into message values ()",
+		"insert into message values ($1, $2, $3, $4, $5) returning id )",
+		msg.Id(),
 	); err != nil || ct.RowsAffected() != 1 {
 		return err
 	}
@@ -40,11 +42,7 @@ func (m MessageReposytory) Create(ctx context.Context, msg message.Message) erro
 	return err
 }
 
-func (m MessageReposytory) Get(ctx context.Context, id user.ID) ([]dto.Message, error) {
-
-}
-
-func (m MessageReposytory) FindByUserId(ctx context.Context, id user.ID) ([]dto.Message, error) {
+func (m MessageRepository) FindByUserId(ctx context.Context, id user2.ID) ([]dto.Message, error) {
 
 	rows, err := m.db.Query(
 		ctx,
@@ -82,7 +80,7 @@ func (m MessageReposytory) FindByUserId(ctx context.Context, id user.ID) ([]dto.
 	return msgs, err
 }
 
-func (m MessageReposytory) FindByChannelId(ctx context.Context, id user.ChannelId) ([]dto.Message, error) {
+func (m MessageRepository) FindByChannelId(ctx context.Context, id user.ChannelId) ([]dto.Message, error) {
 
 	rows, err := m.db.Query(
 		ctx,

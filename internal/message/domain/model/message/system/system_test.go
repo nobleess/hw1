@@ -3,7 +3,7 @@ package system
 import (
 	"fmt"
 	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 	"testing"
 	"time"
 
@@ -12,7 +12,7 @@ import (
 
 func TestNewSystemMessage(t *testing.T) {
 	m := NewMessage(
-		[]user.Login{"Recipient1", "Recipient2", "Recipient3"},
+		[]model.Login{"Recipient1", "Recipient2", "Recipient3"},
 		time.Now(),
 		"TextMsg",
 	)
@@ -23,7 +23,7 @@ func TestNewSystemMessage(t *testing.T) {
 
 func TestMessageString(t *testing.T) {
 	m := NewMessage(
-		[]user.Login{"Recipient1", "Recipient2", "Recipient3"},
+		[]model.Login{"Recipient1", "Recipient2", "Recipient3"},
 		time.Now(),
 		"TextMsg",
 	)

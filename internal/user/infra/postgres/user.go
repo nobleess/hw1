@@ -2,17 +2,18 @@ package postgres
 
 import (
 	"context"
-	"main/internal/message/infra"
-	"main/internal/message/infra/postgres/dto"
+
 	"main/internal/user/domain/model"
+	"main/internal/user/infra"
+	"main/internal/user/infra/postgres/dto"
 )
 
 type UserRepository struct {
 	db infra.DB
-	//	somelse
+	//	here need logger
 }
 
-func (u UserRepository) GetUsers(ctx context.Context) ([]model.User, error) {
+func (u UserRepository) Get(ctx context.Context) ([]model.User, error) {
 
 	rows, err := u.db.Query(ctx, "SELECT id, username FROM users")
 
@@ -25,20 +26,52 @@ func (u UserRepository) GetUsers(ctx context.Context) ([]model.User, error) {
 	users := make([]dto.User, 0)
 
 	for rows.Next() {
-		var u dto.User
+		var user dto.User
 		if err = rows.Scan(
-			&u.ID,
-			&u.Username,
+			&user.ID,
+			&user.Username,
 		); err != nil {
 			return nil, err
 		}
-		users = append(users, u)
+		users = append(users, user)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
-	return dto.UserAdapter(users), nil
+	return dto.UsersAdapter(users), nil
+}
+
+func (u UserRepository) GetById(ctx context.Context, id model.ID) (model.User, error) {
+
+	row := u.db.QueryRow(ctx, "SELECT id, username FROM users where id = $1", id)
+
+	var user dto.User
+
+	if err := row.Scan(
+		&user.ID,
+		&user.Username,
+	); err != nil {
+		return model.User{}, err
+	}
+
+	return dto.UserAdapter(user), nil
+}
+
+func (u UserRepository) GetByUsername(ctx context.Context, username string) (model.User, error) {
+
+	row := u.db.QueryRow(ctx, "SELECT id, username FROM users where username = $1", username)
+
+	var user dto.User
+
+	if err := row.Scan(
+		&user.ID,
+		&user.Username,
+	); err != nil {
+		return model.User{}, err
+	}
+
+	return dto.UserAdapter(user), nil
 }
 
 func (u UserRepository) Create(ctx context.Context, user model.User) error {
@@ -68,7 +101,7 @@ func (u UserRepository) Create(ctx context.Context, user model.User) error {
 	return nil
 }
 
-func (u UserRepository) Delete(ctx context.Context, user model.User) error {
+func (u UserRepository) Delete(ctx context.Context, id model.ID) error {
 	tx, err := u.db.BeginTx(ctx)
 
 	if err != nil {
@@ -82,13 +115,13 @@ func (u UserRepository) Delete(ctx context.Context, user model.User) error {
 	if ct, err := tx.Exec(
 		ctx,
 		"delete from model where id = $1",
-		user.ID(),
+		id,
 	); err != nil || ct.RowsAffected() != 1 {
 		return err
 	}
 	err = tx.Commit(ctx)
 	if err != nil {
-		return nil
+		return err
 	}
 	return nil
 }

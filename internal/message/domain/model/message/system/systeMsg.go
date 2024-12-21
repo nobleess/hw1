@@ -3,19 +3,19 @@ package system
 import (
 	"fmt"
 	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 	"time"
 )
 
 // Message
 type Message struct {
 	id   message.ID
-	to   []user.Login
+	to   []model.Login
 	time time.Time
 	text string
 }
 
-func NewMessage(to []user.Login, time time.Time, text string) *Message {
+func NewMessage(to []model.Login, time time.Time, text string) *Message {
 	return &Message{
 		id:   message.GenerateID(),
 		to:   to,
@@ -24,11 +24,11 @@ func NewMessage(to []user.Login, time time.Time, text string) *Message {
 	}
 }
 
-func (m *Message) From() user.Login {
+func (m *Message) From() model.Login {
 	return ""
 }
 
-func (m *Message) To() []user.Login {
+func (m *Message) To() []model.Login {
 	return nil
 }
 

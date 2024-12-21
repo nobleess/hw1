@@ -5,9 +5,9 @@ import (
 	"main/internal/message/domain/model/message"
 	"main/internal/message/domain/model/message/system"
 	"main/internal/message/domain/model/message/text"
-	user2 "main/internal/message/domain/model/user"
 	inmemory2 "main/internal/message/infra/inmemory"
 	"main/internal/model/user"
+	user2 "main/internal/user/domain/model"
 	"os"
 	"time"
 )

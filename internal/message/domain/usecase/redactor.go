@@ -2,11 +2,11 @@ package usecase
 
 import (
 	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 )
 
 type Storage interface {
-	GetUserMessage(user.Login) ([]message.Message, error)
+	GetUserMessage(model.Login) ([]message.Message, error)
 	UpdateByID(message.ID, message.Message) error
 	Update(message.Message) error
 }

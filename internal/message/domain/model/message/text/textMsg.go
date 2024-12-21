@@ -2,23 +2,24 @@ package text
 
 import (
 	"fmt"
+	"main/internal/channel/channel"
 	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 	"time"
 )
 
 // Message
 type Message struct {
 	id        message.ID // `db:"id"`
-	userId    user.ID    // `db:"user_id"`
-	channelId message.ID // `db:"channel_id"`
+	userId    model.ID   // `db:"user_id"`
+	channelId channel.ID // `db:"channel_id"`
 	text      string     // `db:"text"`
 	CreateAt  time.Time  // `db:"create_at"`
 	UpdateAt  time.Time  // `db:"update_at"`
 }
 
-func NewMessage(id message.ID, userId user.ID, channelId channel.ID, createAt time.Time, updateAt time.Time, text string) Message {
-	return Message{
+func NewMessage(id message.ID, userId model.ID, channelId channel.ID, createAt time.Time, updateAt time.Time, text string) *Message {
+	return &Message{
 		id:        id,
 		userId:    userId,
 		channelId: channelId,
@@ -28,11 +29,11 @@ func NewMessage(id message.ID, userId user.ID, channelId channel.ID, createAt ti
 	}
 }
 
-func (m *Message) From() user.Login {
+func (m *Message) From() model.Login {
 	return m.from
 }
 
-func (m *Message) To() []user.Login {
+func (m *Message) To() []model.Login {
 	return m.to
 }
 

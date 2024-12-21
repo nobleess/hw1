@@ -3,21 +3,21 @@ package media
 import (
 	"fmt"
 	"main/internal/message/domain/model/message"
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 	"time"
 )
 
 // Message
 type Message struct {
 	id    message.ID
-	from  user.Login
-	to    []user.Login
+	from  model.Login
+	to    []model.Login
 	time  time.Time
 	types string
 	url   string
 }
 
-func NewMessage(from user.Login, to []user.Login, time time.Time, types, url string) *Message {
+func NewMessage(from model.Login, to []model.Login, time time.Time, types, url string) *Message {
 	return &Message{
 		id:    message.GenerateID(),
 		from:  from,
@@ -28,11 +28,11 @@ func NewMessage(from user.Login, to []user.Login, time time.Time, types, url str
 	}
 }
 
-func (m *Message) From() user.Login {
+func (m *Message) From() model.Login {
 	return m.from
 }
 
-func (m *Message) To() []user.Login {
+func (m *Message) To() []model.Login {
 	return m.to
 }
 

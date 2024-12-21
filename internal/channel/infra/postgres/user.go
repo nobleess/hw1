@@ -7,12 +7,12 @@ import (
 	"main/internal/user/domain/model"
 )
 
-type UserRepository struct {
+type ChannelRepository struct {
 	db infra.DB
 	//	somelse
 }
 
-func (u UserRepository) GetUsers(ctx context.Context) ([]model.User, error) {
+func (u ChannelRepository) GetMembers(ctx context.Context) ([]model.User, error) {
 
 	rows, err := u.db.Query(ctx, "SELECT id, username FROM users")
 
@@ -41,7 +41,7 @@ func (u UserRepository) GetUsers(ctx context.Context) ([]model.User, error) {
 	return dto.UserAdapter(users), nil
 }
 
-func (u UserRepository) Create(ctx context.Context, user model.User) error {
+func (u ChannelRepository) Create(ctx context.Context, user model.User) error {
 
 	tx, err := u.db.BeginTx(ctx)
 
@@ -68,7 +68,7 @@ func (u UserRepository) Create(ctx context.Context, user model.User) error {
 	return nil
 }
 
-func (u UserRepository) Delete(ctx context.Context, user model.User) error {
+func (u ChannelRepository) Delete(ctx context.Context, user model.User) error {
 	tx, err := u.db.BeginTx(ctx)
 
 	if err != nil {
@@ -93,7 +93,7 @@ func (u UserRepository) Delete(ctx context.Context, user model.User) error {
 	return nil
 }
 
-func (u UserRepository) Update(ctx context.Context, user model.User) error {
+func (u ChannelRepository) Update(ctx context.Context, user model.User) error {
 	tx, err := u.db.BeginTx(ctx)
 
 	if err != nil {

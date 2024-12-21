@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"main/internal/message/domain/model/user"
+	"main/internal/user/domain/model"
 	"time"
 
 	pgxUUID "github.com/vgarvardt/pgx-google-uuid/v5"
@@ -14,14 +14,14 @@ type User struct {
 	Data     time.Time    `db:"data"`
 }
 
-func UserAdapter(users []User) []user.User {
-	busers := make([]user.User, 0)
+func UserAdapter(users []User) []model.User {
+	bmodel := make([]model.User, 0)
 	for _, u := range users {
-		busers = append(busers,
-			*user.New(
-				user.ID(u.ID),
-				user.Login(u.Username),
+		bmodel = append(bmodel,
+			*model.New(
+				model.ID(u.ID),
+				model.Login(u.Username),
 			))
 	}
-	return busers
+	return bmodel
 }
