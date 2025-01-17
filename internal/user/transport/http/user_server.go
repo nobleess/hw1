@@ -1,7 +1,6 @@
 package http
 
 import (
-	"context"
 	"main/internal/user/domain/usecase"
 
 	"github.com/gorilla/mux"
@@ -11,20 +10,23 @@ import (
 
 type UserAPI struct {
 	log     zerolog.Logger
-	useCase usecase.Service
-	cfg     *config.Notification
+	useCase usecase.UseCase
 }
 
-func NewUserAPI(cfg *config.Notification, router *mux.Router, useCase usecase.Service) *UserAPI {
+func NewUserAPI(router *mux.Router, useCase usecase.UseCase) {
 
 	logger := log.With().
 		Str("module", "notification-server").
 		Logger()
 
-	router.HandleFunc("/api/v1/users", useCase.Func).Methods("POST")
-	return &UserAPI{
+	userAPI := UserAPI{
 		log:     logger,
 		useCase: useCase,
-		cfg:     cfg,
 	}
+	router.HandleFunc("/api/v1/users", userAPI.Create).Methods("POST")
+	router.HandleFunc("/api/v1/users", userAPI.Read).Methods("GET")
+
+	router.HandleFunc("/api/v1/users/{id}", userAPI.Update).Methods("PUT")
+	router.HandleFunc("/api/v1/users/{id}", userAPI.Delete).Methods("DELETE")
+	router.HandleFunc("/api/v1/users/{id}", userAPI.Read).Methods("POST")
 }

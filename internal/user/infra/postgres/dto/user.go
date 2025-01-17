@@ -19,7 +19,10 @@ func UsersAdapter(users []User) []model.User {
 	models := make([]model.User, 0)
 	for _, u := range users {
 		models = append(models,
-			UserAdapter(u))
+			*model.New(
+				model.ID(u.ID),
+				model.Login(u.Username),
+			))
 	}
 	return models
 }

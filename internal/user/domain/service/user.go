@@ -28,8 +28,8 @@ func (u UserService) Update(ctx context.Context, user model.User) error {
 	return nil
 }
 
-func (u UserService) Read(ctx context.Context) (model.User, error) {
-	u.repository.Get(ctx)
+func (u UserService) Read(ctx context.Context, id model.ID) (model.User, error) {
+	return u.repository.GetById(ctx, id)
 }
 
 func (u UserService) Delete(ctx context.Context, id model.ID) error {
